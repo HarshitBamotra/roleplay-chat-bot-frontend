@@ -19,12 +19,10 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await api.get('/api/v1/auth/me');
         setUser(response.data.data);
-        // console.log(user);
       } catch (err) {
         console.error('Error fetching current user:', err);
         localStorage.removeItem('token');
       } finally {
-        // console.log(user);
         setLoading(false);
       }
     };
@@ -57,14 +55,14 @@ export const AuthProvider = ({ children }) => {
           formData.append(key, userData[key]);
         }
       });
-      // console.log(formData);
+      
       const response = await api.post('/api/v1/auth/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
-      console.log(response);
+      
       localStorage.setItem('token', response.data.data.token);
       setUser(response.data.data.user);
       return response.data.data;
