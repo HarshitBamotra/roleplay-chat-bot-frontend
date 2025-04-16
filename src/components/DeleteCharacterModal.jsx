@@ -1,5 +1,5 @@
-import { X } from 'lucide-react';
 import { useState } from 'react';
+import { X } from 'lucide-react';
 
 function DeleteCharacterModal({ character, onClose, onDelete, isDeleting }) {
   const [error, setError] = useState(null);

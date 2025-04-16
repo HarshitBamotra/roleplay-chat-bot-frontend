@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import ChatWindow from '../components/ChatWindow';
 import CreateCharacterModal from '../components/CreateCharacterModal';
+import DeleteCharacterModal from '../components/DeleteCharacterModal';
 import UserSettingsModal from '../components/UserSettingsModal';
 import { useAuth } from '../context/AuthContext';
 import api from '../api';
@@ -15,6 +16,10 @@ function Dashboard() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Add these new states for delete functionality
+  const [characterToDelete, setCharacterToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchCharacters();
@@ -23,6 +28,8 @@ function Dashboard() {
   useEffect(() => {
     if (selectedCharacter) {
       fetchChatHistory(selectedCharacter._id);
+    } else {
+      setMessages([]);
     }
   }, [selectedCharacter]);
 
@@ -79,6 +86,36 @@ function Dashboard() {
     }
   };
 
+  // New function for opening delete modal
+  const handleOpenDeleteModal = (character) => {
+    setCharacterToDelete(character);
+  };
+
+  // New function for handling character deletion
+  const handleDeleteCharacter = async (characterId) => {
+    try {
+      setIsDeleting(true);
+      await api.delete(`/api/v1/character/${characterId}`);
+      
+      // Update characters list
+      setCharacters(characters.filter(char => char._id !== characterId));
+      
+      // If deleted character was selected, select the first available character or null
+      if (selectedCharacter && selectedCharacter._id === characterId) {
+        const remainingChars = characters.filter(char => char._id !== characterId);
+        setSelectedCharacter(remainingChars.length > 0 ? remainingChars[0] : null);
+      }
+      
+      // Close the modal
+      setCharacterToDelete(null);
+    } catch (err) {
+      console.error('Error deleting character:', err);
+      throw err;
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleSendMessage = async (content) => {
     if (!selectedCharacter || !content.trim()) return;
 
@@ -112,6 +149,7 @@ function Dashboard() {
         onSelectCharacter={handleCharacterSelect}
         onCreateCharacter={() => setIsCharacterModalOpen(true)}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
+        onDeleteCharacter={handleOpenDeleteModal}
         onLogout={logout}
         isLoading={isLoading}
       />
@@ -133,6 +171,15 @@ function Dashboard() {
         <UserSettingsModal
           user={user}
           onClose={() => setIsSettingsModalOpen(false)}
+        />
+      )}
+      
+      {characterToDelete && (
+        <DeleteCharacterModal
+          character={characterToDelete}
+          onClose={() => setCharacterToDelete(null)}
+          onDelete={handleDeleteCharacter}
+          isDeleting={isDeleting}
         />
       )}
       
