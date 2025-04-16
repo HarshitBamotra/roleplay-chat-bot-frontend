@@ -71,7 +71,7 @@ function Dashboard() {
       if (characterData.image) {
         formData.append('image', characterData.image);
       }
-      console.log(formData);
+      
       const response = await api.post('/api/v1/character', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'

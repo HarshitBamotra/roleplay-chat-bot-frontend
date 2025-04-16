@@ -50,7 +50,7 @@ function UserSettingsModal({ user, onClose }) {
       if (formData.profileImage) {
         formDataToSend.append('image', formData.profileImage);
       }
-      // console.log(formDataToSend);
+
       const response = await api.put('/api/v1/auth/me', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -58,7 +58,6 @@ function UserSettingsModal({ user, onClose }) {
       });
 
       const updatedUser = response.data.data;
-      console.log(updatedUser);
       setUser(updatedUser);
       setSuccess('Profile updated successfully');
     } catch (err) {

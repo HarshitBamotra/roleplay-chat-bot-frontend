@@ -64,7 +64,7 @@ function Register() {
     
     setIsLoading(true);
     try {
-      // console.log(formData);
+      
       await register(formData);
       navigate('/', { replace: true });
     } catch (err) {
