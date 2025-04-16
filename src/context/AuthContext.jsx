@@ -52,17 +52,19 @@ export const AuthProvider = ({ children }) => {
       const formData = new FormData();
       Object.keys(userData).forEach(key => {
         if (key === 'profileImage' && userData[key]) {
-          formData.append('profileImage', userData[key]);
+          formData.append('image', userData[key]);
         } else {
           formData.append(key, userData[key]);
         }
       });
-
+      // console.log(formData);
       const response = await api.post('/api/v1/auth/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+
+      console.log(response);
       localStorage.setItem('token', response.data.data.token);
       setUser(response.data.data.user);
       return response.data.data;

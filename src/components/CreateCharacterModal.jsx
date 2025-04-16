@@ -9,6 +9,7 @@ function CreateCharacterModal({ onClose, onSubmit }) {
     image: null
   });
   const [imagePreview, setImagePreview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +37,7 @@ function CreateCharacterModal({ onClose, onSubmit }) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true)
     onSubmit(characterData);
   };
   
@@ -127,9 +129,9 @@ function CreateCharacterModal({ onClose, onSubmit }) {
             <button 
               type="submit" 
               className="submit-button"
-              disabled={!characterData.name || !characterData.personality || !characterData.backstory}
+              disabled={!characterData.name || !characterData.personality || !characterData.backstory || isLoading}
             >
-              Create Character
+              {isLoading ? "Creating Character..." : "Create Character"}
             </button>
           </div>
         </form>

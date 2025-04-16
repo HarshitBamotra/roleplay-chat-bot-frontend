@@ -26,7 +26,7 @@ function Sidebar({ user, characters, selectedCharacter, onSelectCharacter, onCre
           characters.map((character) => (
             <div 
               key={character._id}
-              className={`character-item ${selectedCharacter?.id === character.id ? 'selected' : ''}`}
+              className={`character-item ${selectedCharacter?._id === character._id ? 'selected' : ''}`}
               onClick={() => onSelectCharacter(character)}
             >
               {character.imageUrl ? (

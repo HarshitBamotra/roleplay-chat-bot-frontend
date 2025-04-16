@@ -17,7 +17,6 @@ function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   
-  // Redirect if already logged in
   if (user) {
     navigate('/', { replace: true });
     return null;
@@ -65,6 +64,7 @@ function Register() {
     
     setIsLoading(true);
     try {
+      // console.log(formData);
       await register(formData);
       navigate('/', { replace: true });
     } catch (err) {
